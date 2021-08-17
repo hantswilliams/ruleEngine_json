@@ -12,19 +12,26 @@ app.use(bodyParser.json());
 app.listen(port);
 
 
+// Opiton rules // allow undefined facts
+let engineOptions = {
+  allowUndefinedFacts: true,
+};
+
 // Setting up the rules engine 
-let eng = new Engine();
+let eng = new Engine([], engineOptions);
+
 eng.addRule(testRules.k1Rule)
+eng.addRule(testRules.biologicalSex)
 
 // whenever rule is evaluated and the conditions pass, 'rule pass message' will trigger
 eng.on('success', function(event, almanac, ruleResult) {
-    ruledetailfunction.renderDetails(ruleResult, almanac)
-  })
+    ruledetailfunction.renderDetails(event, ruleResult, almanac)
+})
 
 // whenever rule is evaluated and the conditions fail, 'rule fail message' will trigger
 eng.on('failure', function(event, almanac, ruleResult) {
-    ruledetailfunction.renderDetails(ruleResult, almanac)
-  })  
+    ruledetailfunction.renderDetails(event, ruleResult, almanac)
+})  
 
 // default route 
 app.get('/', (req, res) => {
@@ -35,12 +42,21 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
 
     let fact = req.body;
-    eng
-        .run(fact)
-        .then(res.send({
-            messge: "Rules executed"
-        }))
-        .catch(err => console.log(err.stack));
+    
+    async function start () {    
+      await Promise.all([
+        eng
+            .run(fact)
+            .then(res.send({
+                userID: fact.userid,
+                simpleMessge: "rules executed",
+                detailedMessage: ''
+            }))
+            .catch(err => console.log(err.stack))
+        ])
+    }
+
+    start()
 
 });
 

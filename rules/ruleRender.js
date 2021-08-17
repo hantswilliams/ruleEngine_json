@@ -1,6 +1,6 @@
 // additional succes and fail messages
 
-function renderDetails (ruleResult, almanac) {
+function renderDetails (event, ruleResult, almanac) {
 
     const userid = almanac.factValue('userid')
 
@@ -10,9 +10,11 @@ function renderDetails (ruleResult, almanac) {
         const detailPass = ruleResult.conditions.all.filter(condition => condition.result)
             .map(condition => {
             switch (condition.operator) {
-                case 'greaterThanInclusive':
+              case 'equal':
                 return `${condition.fact} had a value of ${condition.factResult}`
-                default:
+              case 'greaterThanInclusive':
+                return `${condition.fact} had a value of ${condition.factResult}`
+              default:
                 return ``
             }
             }).join(' and ')
@@ -21,18 +23,23 @@ function renderDetails (ruleResult, almanac) {
             'userid': userid, 
             'ruleResult': ruleResult.result,
             'ruleName': ruleResult.name,
-            'inputeData': detailPass
-
-        }   
+            'ruleOutputMessage': event.params.humanMessage,
+            'inputeData': detailPass, 
+            // 'outputResultRaw': ruleResult
+          }   
         
 
-        return console.log('rulePassMessage: '.green, simpleLogPass)
+        console.log('rulePassMessage: '.green, simpleLogPass)
+        return simpleLogPass
+
     }
 
     // if rule failed, iterate over each failed condition to determine why the student didn't qualify for athletics honor roll
     const detailFail = ruleResult.conditions.all.filter(condition => !condition.result)
       .map(condition => {
         switch (condition.operator) {
+          case 'equal':
+            return `${condition.fact} had a value of ${condition.factResult}`
           case 'greaterThanInclusive':
             return `${condition.fact} had a value of ${condition.factResult}`
           default:
@@ -44,10 +51,14 @@ function renderDetails (ruleResult, almanac) {
         'userid': userid, 
         'ruleResult': ruleResult.result,
         'ruleName': ruleResult.name,
-        'inputeData': detailFail
+        'ruleOutputMessage': event.params.humanMessage,
+        'inputeData': detailFail,
+        // 'outputResultRaw': ruleResult
     }  
 
     console.log('ruleFailMessage'.red, simpleLogFail)
+    return simpleLogFail
+
   }
 
   module.exports = { renderDetails };
