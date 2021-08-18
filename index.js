@@ -65,19 +65,6 @@ app.post('/', (req, res) => {
         console.log("eventsFail: ", failureEvents)
         console.log("almanac: ", almanac)
 
-        
-        var testfile = almanac.ruleResults
-            .map(x => x.conditions)
-
-        var testfile2 = testfile
-            .map(x => x.all)
-
-        console.log('quickTest1: ', almanac)
-        console.log('quickTest2: ', testfile)
-        console.log('quickTest3: ', testfile2)
-
-        output = {'rulesPassed': events, 'rulesFailed': failureEvents} 
-
         console.log('holder: ', outputHolder)
 
         res.send(outputHolder).then(outputHolder = [])
