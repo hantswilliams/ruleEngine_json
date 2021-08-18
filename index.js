@@ -1,4 +1,3 @@
-require('colors')
 const express = require('express');
 const bodyParser = require('body-parser');
 const Engine = require('json-rules-engine').Engine;
@@ -8,9 +7,19 @@ const port = process.argv[2] || 3000;
 const testRules = require('./rules/rules.js')
 const ruledetailfunction = require('./rules/ruleRender.js')
 
+require('colors')
+
 app.use(bodyParser.json());
 app.listen(port);
 
+
+
+
+
+
+// DEFINING SOME RULES OPTIONS AND PARAMTERS // DEFINING SOME RULES OPTIONS AND PARAMTERS 
+// DEFINING SOME RULES OPTIONS AND PARAMTERS // DEFINING SOME RULES OPTIONS AND PARAMTERS 
+// DEFINING SOME RULES OPTIONS AND PARAMTERS // DEFINING SOME RULES OPTIONS AND PARAMTERS 
 
 // Opiton rules // allow undefined facts
 let engineOptions = {
@@ -38,20 +47,15 @@ eng.on('failure', function(event, almanac, ruleResult) {
 
 
 
+// EXPRESS ROUTES // EXPRESS ROUTES // EXPRESS ROUTES // EXPRESS ROUTES 
+// EXPRESS ROUTES // EXPRESS ROUTES // EXPRESS ROUTES // EXPRESS ROUTES 
+// EXPRESS ROUTES // EXPRESS ROUTES // EXPRESS ROUTES // EXPRESS ROUTES 
 
 
-
-
-
-
-
-
-// default route 
 app.get('/', (req, res) => {
     res.send('Hello from JSON-rules-engine!');
 });
 
-// test route 
 app.post('/', (req, res) => {
 
     let fact = req.body;
