@@ -23,21 +23,32 @@ let eng = new Engine([], engineOptions);
 eng.addRule(testRules.k1Rule)
 eng.addRule(testRules.biologicalSex)
 
-tempHolder = []
+var outputHolder = []
 
 // whenever rule is evaluated and the conditions pass, 'rule pass message' will trigger
 eng.on('success', function(event, almanac, ruleResult) {
-    ruledetailfunction.renderDetails(event, ruleResult, almanac)
+    outputHolder.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
 })
 
 // whenever rule is evaluated and the conditions fail, 'rule fail message' will trigger
 eng.on('failure', function(event, almanac, ruleResult) {
-    ruledetailfunction.renderDetails(event, ruleResult, almanac)
+    outputHolder.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
 })  
+
+
+
+
+
+
+
+
+
+
+
 
 // default route 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('Hello from JSON-rules-engine!');
 });
 
 // test route 
@@ -45,16 +56,21 @@ app.post('/', (req, res) => {
 
     let fact = req.body;
     
-    async function start () {    
-      await Promise.all([
-        eng
-            .run(fact)
-            .then(res.send({
-                userID: fact.userid,
-                simpleMessge: "rules executed",
-            }))
-            .catch(err => console.log(err.stack))
-        ])
+    async function start () {  
+        await Promise.all([
+            eng
+                .run(fact)
+                .catch(err => console.log(err.stack))
+            ])
+            .then(outputHolder = [])
+            
+
+        res.send({
+            userID: fact.userid,
+            simpleMessge: "rules executed",
+            outputHolder: outputHolder,
+        })
+
     }
 
     start()

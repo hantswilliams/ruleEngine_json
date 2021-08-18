@@ -2,7 +2,7 @@
 
 function renderDetails (event, ruleResult, almanac) {
 
-    const userid = almanac.factValue('userid')
+    // const userid = almanac.factValue('userid')
 
     // if rule succeeded, render success message
     if (ruleResult.result) {
@@ -20,7 +20,7 @@ function renderDetails (event, ruleResult, almanac) {
             }).join(' and ')
 
         simpleLogPass = {
-            'userid': userid, 
+            // 'userid': userid, 
             'ruleResult': ruleResult.result,
             'ruleName': ruleResult.name,
             'ruleOutputMessage': event.params.humanMessage,
@@ -48,7 +48,7 @@ function renderDetails (event, ruleResult, almanac) {
       }).join(' and ')
 
       simpleLogFail = {
-        'userid': userid, 
+        // 'userid': userid, 
         'ruleResult': ruleResult.result,
         'ruleName': ruleResult.name,
         'ruleOutputMessage': event.params.humanMessage,
