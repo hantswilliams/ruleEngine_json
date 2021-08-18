@@ -1,6 +1,6 @@
 require('colors')
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const Engine = require('json-rules-engine').Engine;
 const app = express();
 const port = process.argv[2] || 3000;
@@ -8,7 +8,7 @@ const port = process.argv[2] || 3000;
 const testRules = require('./rules/rules.js')
 const ruledetailfunction = require('./rules/ruleRender.js')
 
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.listen(port);
 
 
@@ -23,78 +23,57 @@ let eng = new Engine([], engineOptions);
 eng.addRule(testRules.k1Rule)
 eng.addRule(testRules.biologicalSex)
 
-
-var outputHolder = []
+var outputDetails = []
 
 // whenever rule is evaluated and the conditions pass, 'rule pass message' will trigger
 eng.on('success', function(event, almanac, ruleResult) {
-    outputHolder.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
+    outputDetails.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
 })
 
 // whenever rule is evaluated and the conditions fail, 'rule fail message' will trigger
 eng.on('failure', function(event, almanac, ruleResult) {
-    outputHolder.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
+    outputDetails.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
 })  
+
+
+
+
+
+
+
+
+
+
 
 
 // default route 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('Hello from JSON-rules-engine!');
 });
 
 // test route 
 app.post('/', (req, res) => {
 
+    let fact = req.body;
+    
+    async function start () {  
 
-    async function runRules(){
+        await Promise.all([
+            eng
+                .run(fact)
+                .catch(err => console.log(err.stack))
+            ])
+            .then(outputDetails = [])
 
-        let fact = req.body;
-
-        const {
-            results,         // rule results for successful rules
-            failureResults,  // rule results for failed rules
-            events,          // array of successful rule events
-            failureEvents,   // array of failed rule events
-            almanac          // Almanac instance representing the run
-          } = await eng.run(fact)
-
-        console.log("userId: ", almanac.factValue('userid'))
-        console.log("resultsPass: ", results)
-        console.log("resultsFail: ", failureResults)
-        console.log("eventsPass: ", events)
-        console.log("eventsFail: ", failureEvents)
-        console.log("almanac: ", almanac)
-
-        console.log('holder: ', outputHolder)
-
-        res.send(outputHolder).then(outputHolder = [])
-
-
-
+        res.send({
+            userID: fact.userid,
+            simpleMessge: "rules executed",
+            outputDetails: outputDetails,
+        })
 
     }
 
-    runRules();
-
-
-    
-    // async function start () {    
-    //   await Promise.all([
-    //     eng
-    //         .run(fact)
-    //         .then(res.send({
-    //             userID: fact.userid,
-    //             simpleMessge: "rules executed",
-    //         }))
-    //         .catch(err => console.log(err.stack))
-    //     ])
-    // }
-    // start()
-
-   
-
-
-
+    start()
 
 });
 
