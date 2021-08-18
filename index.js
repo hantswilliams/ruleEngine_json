@@ -23,16 +23,16 @@ let eng = new Engine([], engineOptions);
 eng.addRule(testRules.k1Rule)
 eng.addRule(testRules.biologicalSex)
 
-var outputHolder = []
+var outputDetails = []
 
 // whenever rule is evaluated and the conditions pass, 'rule pass message' will trigger
 eng.on('success', function(event, almanac, ruleResult) {
-    outputHolder.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
+    outputDetails.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
 })
 
 // whenever rule is evaluated and the conditions fail, 'rule fail message' will trigger
 eng.on('failure', function(event, almanac, ruleResult) {
-    outputHolder.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
+    outputDetails.push(ruledetailfunction.renderDetails(event, ruleResult, almanac))
 })  
 
 
@@ -63,12 +63,12 @@ app.post('/', (req, res) => {
                 .run(fact)
                 .catch(err => console.log(err.stack))
             ])
-            .then(outputHolder = [])
+            .then(outputDetails = [])
 
         res.send({
             userID: fact.userid,
             simpleMessge: "rules executed",
-            outputHolder: outputHolder,
+            outputDetails: outputDetails,
         })
 
     }
