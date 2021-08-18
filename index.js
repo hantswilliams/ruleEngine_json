@@ -57,13 +57,13 @@ app.post('/', (req, res) => {
     let fact = req.body;
     
     async function start () {  
+
         await Promise.all([
             eng
                 .run(fact)
                 .catch(err => console.log(err.stack))
             ])
             .then(outputHolder = [])
-            
 
         res.send({
             userID: fact.userid,

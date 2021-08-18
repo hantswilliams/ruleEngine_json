@@ -11,21 +11,37 @@ function renderDetails (event, ruleResult, almanac) {
             .map(condition => {
             switch (condition.operator) {
               case 'equal':
-                return `${condition.fact} had a value of ${condition.factResult}`
+                return `the operator was ${condition.operator} with a fact of: ${condition.fact} and value of ${condition.factResult}`
               case 'greaterThanInclusive':
-                return `${condition.fact} had a value of ${condition.factResult}`
+                return `the operator was ${condition.operator} with a fact of: ${condition.fact} had a value of ${condition.factResult}`
               default:
                 return ``
             }
             }).join(' and ')
 
+        const operatorValue = ruleResult.conditions.all.filter(condition => condition.result)
+            .map(condition => {
+                return `${condition.operator}`
+            })
+
+        const conditionfactValue = ruleResult.conditions.all.filter(condition => condition.result)
+            .map(condition => {
+                return `${condition.fact}`
+            })
+
+        const conditionfactResults = ruleResult.conditions.all.filter(condition => condition.result)
+            .map(condition => {
+                return `${condition.factResult}`
+            })
+
         simpleLogPass = {
-            // 'userid': userid, 
             'ruleResult': ruleResult.result,
             'ruleName': ruleResult.name,
             'ruleOutputMessage': event.params.humanMessage,
             'inputeData': detailPass, 
-            // 'outputResultRaw': ruleResult
+            'operatorValues': operatorValue,
+            'conditionfactNames': conditionfactValue,
+            'conditionfactInputs': conditionfactResults
           }   
         
 
@@ -39,21 +55,37 @@ function renderDetails (event, ruleResult, almanac) {
       .map(condition => {
         switch (condition.operator) {
           case 'equal':
-            return `${condition.fact} had a value of ${condition.factResult}`
+            return `the operator was ${condition.operator} with a fact of: ${condition.fact} and value of ${condition.factResult}`
           case 'greaterThanInclusive':
-            return `${condition.fact} had a value of ${condition.factResult}`
+            return `the operator was ${condition.operator} with a fact of: ${condition.fact} had a value of ${condition.factResult}`
           default:
             return ``
         }
       }).join(' and ')
 
+      const operatorValue = ruleResult.conditions.all.filter(condition => condition.result)
+      .map(condition => {
+          return `${condition.operator}`
+      })
+
+      const conditionfactValue = ruleResult.conditions.all.filter(condition => condition.result)
+      .map(condition => {
+          return `${condition.fact}`
+      })
+
+      const conditionfactResults = ruleResult.conditions.all.filter(condition => condition.result)
+      .map(condition => {
+          return `${condition.factResult}`
+      })
+
       simpleLogFail = {
-        // 'userid': userid, 
         'ruleResult': ruleResult.result,
         'ruleName': ruleResult.name,
         'ruleOutputMessage': event.params.humanMessage,
         'inputeData': detailFail,
-        // 'outputResultRaw': ruleResult
+        'operatorValues': operatorValue,
+        'conditionfactNames': conditionfactValue,
+        'conditionfactInputs': conditionfactResults
     }  
 
     console.log('ruleFailMessage'.red, simpleLogFail)
